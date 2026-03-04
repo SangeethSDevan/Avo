@@ -1,4 +1,4 @@
-import 'package:avo/core/session_state.dart';
+import 'package:avo/core/session/session_state.dart';
 import 'package:avo/model/room_model.dart';
 import 'package:avo/services/socket_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
