@@ -1,0 +1,51 @@
+import 'package:avo/core/session_state.dart';
+import 'package:avo/model/room_model.dart';
+import 'package:avo/services/socket_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class SessionCubit extends Cubit<SessionState>{
+  final SocketService _socketService=SocketService();
+
+  SessionCubit():super(SessionInit()){
+    _socketService.connect();
+
+    _socketService.onMatchFound=(RoomModel room){
+      emit(SessionFound(room));
+    };
+
+    _socketService.onError=(String message){
+      emit(SessionError(message));
+    };
+
+    _socketService.onWaiting=(){
+      emit(SessionWaiting());
+    };
+
+    _socketService.onStart=(ActiveRoomModel room){
+      emit(SessionStarted(room));
+    };
+
+    _socketService.onBreakStart=(ActiveRoomModel room){
+      emit(SessionBreakStart(room));
+    };
+
+    _socketService.onBreakEnd=(ActiveRoomModel room){
+      emit(SessionBreakEnd(room));
+    };
+
+    _socketService.onSessionEnd=(){
+      emit(SessionEnded());
+    };
+
+    _socketService.onSessionQuit=(String message){
+      emit(SessionQuit(message));
+    };
+
+  }
+
+  void findPartner(double duration){
+    emit(SessionLoading());
+    _socketService.findPartner(duration);
+  }
+
+}
