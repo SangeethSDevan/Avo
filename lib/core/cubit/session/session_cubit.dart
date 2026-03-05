@@ -1,19 +1,24 @@
-import 'package:avo/core/session/session_state.dart';
+import 'dart:async';
+
+import 'package:avo/core/cubit/session/session_state.dart';
 import 'package:avo/model/room_model.dart';
 import 'package:avo/services/socket_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SessionCubit extends Cubit<SessionState>{
   final SocketService _socketService=SocketService();
+  Timer? _timeOutTimer;
 
   SessionCubit():super(SessionInit()){
     _socketService.connect();
 
     _socketService.onMatchFound=(RoomModel room){
+      _timeOutTimer?.cancel();
       emit(SessionFound(room));
     };
 
     _socketService.onError=(String message){
+      _timeOutTimer?.cancel();
       emit(SessionError(message));
     };
 
@@ -44,8 +49,19 @@ class SessionCubit extends Cubit<SessionState>{
   }
 
   void findPartner(double duration){
-    emit(SessionLoading());
+    emit(SessionWaiting());
     _socketService.findPartner(duration);
+
+    _timeOutTimer?.cancel();
+    _timeOutTimer=Timer(const Duration(minutes: 1), (){
+      if(state is SessionWaiting){
+        emit(SessionQuit("Looks like we are not able to find a partner, Please try again later!"));
+      }});
   }
+
+  void startSession(String roomId){
+    emit(SessionConfirm());
+    _socketService.startSession(roomId);
+  } 
 
 }

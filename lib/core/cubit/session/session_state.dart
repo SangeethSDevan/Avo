@@ -11,6 +11,8 @@ class SessionFound extends SessionState{
   SessionFound(this.room);
 }
 
+class SessionConfirm extends SessionState{}
+
 class SessionStarted extends SessionState{
   final ActiveRoomModel room;
   SessionStarted(this.room);

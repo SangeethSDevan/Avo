@@ -80,6 +80,10 @@ class SocketService {
     socket.emit("FIND_PARTNER",duration);
   }
 
+  void startSession(String roomId){
+    socket.emit("SOCKET_START",roomId);
+  }
+
   void disconnect(){
     socket.disconnect();
   }

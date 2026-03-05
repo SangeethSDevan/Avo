@@ -1,10 +1,14 @@
 import 'dart:convert';
 
 import 'package:avo/constants/constants.dart';
+import 'package:avo/core/storage/secure_storage/secure_storage.dart';
 import 'package:avo/model/user_model.dart';
 import 'package:http/http.dart' as http;
 
 class UserRepository {
+
+  final _secureStorage=SecureStorage();
+
   Future<UserModel> signup({
     required String username,
     required String name,
@@ -28,7 +32,7 @@ class UserRepository {
       throw data['message'];
     }
 
-    //TODO: Store token in secure storage
+    await _secureStorage.setToken(data['token']);
     return UserModel.fromJSON(data['data']);
   }
 
@@ -50,7 +54,8 @@ class UserRepository {
     if(response.statusCode!=200){
       throw data['message'];
     }
-    //TODO: Store token in secure storage
+    
+    await _secureStorage.setToken(data['token']);
     return UserModel.fromJSON(data['data']);
   }
 }
