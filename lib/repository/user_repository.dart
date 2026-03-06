@@ -54,8 +54,10 @@ class UserRepository {
     if(response.statusCode!=200){
       throw data['message'];
     }
-    
     await _secureStorage.setToken(data['token']);
     return UserModel.fromJSON(data['data']);
+  }
+  Future<void> logout()async{
+    await _secureStorage.clearToken();
   }
 }

@@ -13,9 +13,10 @@ class UserController {
     return null;
   }
   void setUserData(UserModel user){
-    userBox.clear();
-    
     final userData=Users(userId: user.userId,email: user.email,username: user.username,name: user.name);
     userBox.put('user',userData);
+  }
+  void clearData(){
+    userBox.delete('user');
   }
 }
