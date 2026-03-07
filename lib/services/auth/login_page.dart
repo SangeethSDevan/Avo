@@ -17,6 +17,13 @@ class _LoginPageState extends State<LoginPage> {
   final _credentialController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  @override
+  void dispose() {
+    _credentialController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
