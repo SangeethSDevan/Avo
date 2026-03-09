@@ -9,7 +9,7 @@ class SessionCubit extends Cubit<SessionState> {
   Timer? _timeOutTimer;
 
   SessionCubit() : super(SessionInit());
-  
+
   void connect(){
     _socketService.connect();
 
@@ -57,12 +57,14 @@ class SessionCubit extends Cubit<SessionState> {
       if (state is SessionWaiting) {
         _socketService.waitingQuit();
         emit(
-          SessionQuit(
-            "Looks like we are not able to find a partner, Please try again later!",
-          ),
+          SessionQuit("#NOT_FOUND"),
         );
       }
     });
+  }
+
+  bool isConnected(){
+    return _socketService.socket.connected;
   }
 
   void startSession(String roomId) {

@@ -1,3 +1,4 @@
+import 'package:avo/core/cubit/session/session_cubit.dart';
 import 'package:avo/core/cubit/timer/timer_cubit.dart';
 import 'package:avo/core/cubit/user/user_cubit.dart';
 import 'package:avo/core/cubit/user/user_state.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
             color: Colors.black,
             fontFamily: 'Outfit',
-            fontSize: 22,
+            fontSize: 25,
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
@@ -73,8 +74,12 @@ class MyApp extends StatelessWidget {
       ),
       home: BlocBuilder<UserCubit, UserState>(
         builder: (context, state) {
-          if(state is UserLoggedIn){
-            return HomePage();
+          if (state is UserLoggedIn) {
+            return BlocProvider(
+              lazy: false,
+              create: (context) => SessionCubit()..connect(),
+              child: HomePage(),
+            );
           }
           return SignupPage();
         },
