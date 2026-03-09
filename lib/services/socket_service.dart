@@ -15,76 +15,86 @@ class SocketService {
   Function()? onSessionEnd;
   Function(String message)? onSessionQuit;
 
+  void connect() {
+    debugPrint("Connect called!");
+    socket = IO.io(
+      Constants.backendURI,
+      IO.OptionBuilder()
+          .setTransports(['websocket'])
+          .disableAutoConnect()
+          .build(),
+    );
 
-  void connect(){
-    socket=IO.io(Constants.backendURI);
     socket.connect();
 
-    socket.onConnect((_){
+    socket.onConnect((_) {
       debugPrint("Connected to socket!");
     });
 
-    socket.onDisconnect((_){
+    socket.onDisconnect((_) {
       debugPrint("Disconnected from socket!");
     });
 
-    socket.on("MATCH_FOUND", (data){
-      final room=RoomModel.fromJSON(data);
+    socket.on("MATCH_FOUND", (data) {
+      final room = RoomModel.fromJSON(data);
       onMatchFound?.call(room);
     });
 
-    socket.on("WAITING_FOR_PARTNER", (_){
+    socket.on("WAITING_FOR_PARTNER", (_) {
       onWaiting?.call();
     });
 
-    socket.on("PARTNER_ERROR",(_){
+    socket.on("PARTNER_ERROR", (_) {
       onError?.call("Looks like partner had left!");
     });
 
-    socket.on("SESSION_STARTED",(data){
-      final activeRoom=ActiveRoomModel.fromJSON(data);
+    socket.on("SESSION_STARTED", (data) {
+      final activeRoom = ActiveRoomModel.fromJSON(data);
       onStart?.call(activeRoom);
     });
 
-    socket.on("SESSION_ENDED",(_){
+    socket.on("SESSION_ENDED", (_) {
       onSessionEnd?.call();
     });
 
-    socket.on("SESSION_QUIT",(_){
+    socket.on("SESSION_QUIT", (_) {
       onSessionQuit?.call("Partner was disconnected from the session!");
     });
 
-    socket.on("SESSION_LEFT",(_){
+    socket.on("SESSION_LEFT", (_) {
       onSessionQuit?.call("Partner had left before the session!");
     });
 
-    socket.on("SESSION_STARTED",(data){
-      final activeRoom=ActiveRoomModel.fromJSON(data);
+    socket.on("SESSION_STARTED", (data) {
+      final activeRoom = ActiveRoomModel.fromJSON(data);
       onStart?.call(activeRoom);
     });
 
-
-    socket.on("BREAK_START",(data){
-      final activeRoom=ActiveRoomModel.fromJSON(data);
+    socket.on("BREAK_START", (data) {
+      final activeRoom = ActiveRoomModel.fromJSON(data);
       onBreakStart?.call(activeRoom);
     });
 
-    socket.on("BREAK_END",(data){
-      final activeRoom=ActiveRoomModel.fromJSON(data);
+    socket.on("BREAK_END", (data) {
+      final activeRoom = ActiveRoomModel.fromJSON(data);
       onBreakEnd?.call(activeRoom);
     });
-
   }
 
-  void findPartner(double duration){
-    socket.emit("FIND_PARTNER",duration);
+  void waitingQuit(){
+    socket.emit("SESSION_WAITING_LEFT");
   }
 
-  void startSession(String roomId){
-    socket.emit("SOCKET_START",roomId);
+  void findPartner(double duration) {
+    debugPrint("Func called with duration $duration");
+    socket.emit("FIND_PARTNER", duration);
   }
 
-  void disconnect(){
+  void startSession(String roomId) {
+    socket.emit("SOCKET_START", roomId);
+  }
+
+  void disconnect() {
     socket.disconnect();
   }
 }

@@ -1,4 +1,3 @@
-import 'package:avo/core/cubit/session/session_cubit.dart';
 import 'package:avo/core/cubit/timer/timer_cubit.dart';
 import 'package:avo/core/cubit/user/user_cubit.dart';
 import 'package:avo/core/cubit/user/user_state.dart';
@@ -20,7 +19,6 @@ void main() async {
       providers: [
         BlocProvider(create: (_) => UserCubit()),
         BlocProvider(create: (_) => TimerCubit()),
-        BlocProvider(create: (_) => SessionCubit()),
       ],
       child: MyApp(),
     ),

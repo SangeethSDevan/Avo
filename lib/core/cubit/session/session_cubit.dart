@@ -1,67 +1,77 @@
 import 'dart:async';
-
 import 'package:avo/core/cubit/session/session_state.dart';
 import 'package:avo/model/room_model.dart';
 import 'package:avo/services/socket_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SessionCubit extends Cubit<SessionState>{
-  final SocketService _socketService=SocketService();
+class SessionCubit extends Cubit<SessionState> {
+  final SocketService _socketService = SocketService();
   Timer? _timeOutTimer;
 
-  SessionCubit():super(SessionInit()){
+  SessionCubit() : super(SessionInit());
+  
+  void connect(){
     _socketService.connect();
 
-    _socketService.onMatchFound=(RoomModel room){
+    _socketService.onMatchFound = (RoomModel room) {
       _timeOutTimer?.cancel();
       emit(SessionFound(room));
     };
 
-    _socketService.onError=(String message){
+    _socketService.onError = (String message) {
       _timeOutTimer?.cancel();
       emit(SessionError(message));
     };
 
-    _socketService.onWaiting=(){
+    _socketService.onWaiting = () {
       emit(SessionWaiting());
     };
 
-    _socketService.onStart=(ActiveRoomModel room){
+    _socketService.onStart = (ActiveRoomModel room) {
       emit(SessionStarted(room));
     };
 
-    _socketService.onBreakStart=(ActiveRoomModel room){
+    _socketService.onBreakStart = (ActiveRoomModel room) {
       emit(SessionBreakStart(room));
     };
 
-    _socketService.onBreakEnd=(ActiveRoomModel room){
+    _socketService.onBreakEnd = (ActiveRoomModel room) {
       emit(SessionBreakEnd(room));
     };
 
-    _socketService.onSessionEnd=(){
+    _socketService.onSessionEnd = () {
       emit(SessionEnded());
     };
 
-    _socketService.onSessionQuit=(String message){
+    _socketService.onSessionQuit = (String message) {
       emit(SessionQuit(message));
     };
-
   }
 
-  void findPartner(double duration){
+  void findPartner(double duration) {
     emit(SessionWaiting());
     _socketService.findPartner(duration);
 
     _timeOutTimer?.cancel();
-    _timeOutTimer=Timer(const Duration(minutes: 1), (){
-      if(state is SessionWaiting){
-        emit(SessionQuit("Looks like we are not able to find a partner, Please try again later!"));
-      }});
+    _timeOutTimer = Timer(const Duration(minutes: 1), () {
+      if (state is SessionWaiting) {
+        _socketService.waitingQuit();
+        emit(
+          SessionQuit(
+            "Looks like we are not able to find a partner, Please try again later!",
+          ),
+        );
+      }
+    });
   }
 
-  void startSession(String roomId){
+  void startSession(String roomId) {
+    if (!_socketService.socket.connected) emit(SessionError("Socket not created yet!"));
     emit(SessionConfirm());
     _socketService.startSession(roomId);
-  } 
+  }
 
+  void waitingQuit(){
+    _socketService.waitingQuit();
+  }
 }
