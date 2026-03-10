@@ -27,15 +27,15 @@ class SessionCubit extends Cubit<SessionState> {
       emit(SessionWaiting());
     };
 
-    _socketService.onStart = (ActiveRoomModel room) {
+    _socketService.onStart = (RoomModel room) {
       emit(SessionStarted(room));
     };
 
-    _socketService.onBreakStart = (ActiveRoomModel room) {
+    _socketService.onBreakStart = (RoomModel room) {
       emit(SessionBreakStart(room));
     };
 
-    _socketService.onBreakEnd = (ActiveRoomModel room) {
+    _socketService.onBreakEnd = (RoomModel room) {
       emit(SessionBreakEnd(room));
     };
 

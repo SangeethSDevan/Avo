@@ -1,4 +1,5 @@
 import 'package:avo/constants/constants.dart';
+import 'package:avo/core/storage/hive/user_controller.dart';
 import 'package:avo/model/room_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -7,20 +8,24 @@ class SocketService {
   late IO.Socket socket;
 
   Function(RoomModel room)? onMatchFound;
-  Function(ActiveRoomModel room)? onStart;
+  Function(RoomModel room)? onStart;
   Function()? onWaiting;
   Function(String message)? onError;
-  Function(ActiveRoomModel room)? onBreakStart;
-  Function(ActiveRoomModel room)? onBreakEnd;
+  Function(RoomModel room)? onBreakStart;
+  Function(RoomModel room)? onBreakEnd;
   Function()? onSessionEnd;
   Function(String message)? onSessionQuit;
 
   void connect() {
+    final userController=UserController();
+    final user=userController.getUserData();
+
     debugPrint("Connect called!");
     socket = IO.io(
       Constants.backendURI,
       IO.OptionBuilder()
           .setTransports(['websocket'])
+          .setAuth({'userId':user!.userId})
           .disableAutoConnect()
           .build(),
     );
@@ -49,7 +54,7 @@ class SocketService {
     });
 
     socket.on("SESSION_STARTED", (data) {
-      final activeRoom = ActiveRoomModel.fromJSON(data);
+      final activeRoom = RoomModel.fromJSON(data);
       onStart?.call(activeRoom);
     });
 
@@ -66,17 +71,17 @@ class SocketService {
     });
 
     socket.on("SESSION_STARTED", (data) {
-      final activeRoom = ActiveRoomModel.fromJSON(data);
+      final activeRoom =RoomModel.fromJSON(data);
       onStart?.call(activeRoom);
     });
 
     socket.on("BREAK_START", (data) {
-      final activeRoom = ActiveRoomModel.fromJSON(data);
+      final activeRoom = RoomModel.fromJSON(data);
       onBreakStart?.call(activeRoom);
     });
 
     socket.on("BREAK_END", (data) {
-      final activeRoom = ActiveRoomModel.fromJSON(data);
+      final activeRoom = RoomModel.fromJSON(data);
       onBreakEnd?.call(activeRoom);
     });
   }

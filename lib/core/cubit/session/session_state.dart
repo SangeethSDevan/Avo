@@ -14,7 +14,7 @@ class SessionFound extends SessionState{
 class SessionConfirm extends SessionState{}
 
 class SessionStarted extends SessionState{
-  final ActiveRoomModel room;
+  final RoomModel room;
   SessionStarted(this.room);
 }
 
@@ -26,12 +26,12 @@ class SessionQuit extends SessionState{
 }
 
 class SessionBreakStart extends SessionState{
-  final ActiveRoomModel room;
+  final RoomModel room;
   SessionBreakStart(this.room);
 }
 
 class SessionBreakEnd extends SessionState{
-  final ActiveRoomModel room;
+  final RoomModel room;
   SessionBreakEnd(this.room);
 }
 

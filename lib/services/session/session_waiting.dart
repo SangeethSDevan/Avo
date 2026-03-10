@@ -23,6 +23,18 @@ class SessionWaitingPage extends StatelessWidget {
               color: Colors.grey.shade800,
             ),
           ),
+          SizedBox(
+            height: 40,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                color: Colors.black,
+                strokeWidth: 7,
+              )
+            ],
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -32,14 +44,6 @@ class SessionWaitingPage extends StatelessWidget {
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(
-                color: Colors.black,
-              )
-            ],
-          )
         ],
       ),
     );
