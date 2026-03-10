@@ -96,7 +96,7 @@ class SocketService {
   }
 
   void startSession(String roomId) {
-    socket.emit("SOCKET_START", roomId);
+    socket.emit("SESSION_START", roomId);
   }
 
   void disconnect() {

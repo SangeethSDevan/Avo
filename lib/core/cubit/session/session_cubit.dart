@@ -69,8 +69,11 @@ class SessionCubit extends Cubit<SessionState> {
 
   void startSession(String roomId) {
     if (!_socketService.socket.connected) emit(SessionError("Socket not created yet!"));
-    emit(SessionConfirm());
-    _socketService.startSession(roomId);
+    if(state is SessionFound){
+      final room=(state as SessionFound).room;
+      emit(SessionConfirm(room));
+      _socketService.startSession(room.roomId);
+    }
   }
 
   void waitingQuit(){
