@@ -48,9 +48,9 @@ class SessionCubit extends Cubit<SessionState> {
     };
   }
 
-  void findPartner(double duration) {
+  void findPartner(double duration,String category) {
     emit(SessionWaiting());
-    _socketService.findPartner(duration);
+    _socketService.findPartner(duration,category);
 
     _timeOutTimer?.cancel();
     _timeOutTimer = Timer(const Duration(minutes: 1), () {
@@ -67,7 +67,7 @@ class SessionCubit extends Cubit<SessionState> {
     return _socketService.socket.connected;
   }
 
-  void startSession(String roomId) {
+  void startSession() {
     if (!_socketService.socket.connected) emit(SessionError("Socket not created yet!"));
     if(state is SessionFound){
       final room=(state as SessionFound).room;

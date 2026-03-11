@@ -90,9 +90,11 @@ class SocketService {
     socket.emit("SESSION_WAITING_LEFT");
   }
 
-  void findPartner(double duration) {
-    debugPrint("Func called with duration $duration");
-    socket.emit("FIND_PARTNER", duration);
+  void findPartner(double duration,String category) {
+    socket.emit("FIND_PARTNER",{
+      "duration":duration,
+      "category":category
+    });
   }
 
   void startSession(String roomId) {

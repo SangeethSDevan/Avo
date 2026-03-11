@@ -1,5 +1,6 @@
 import 'package:avo/core/cubit/session/session_cubit.dart';
 import 'package:avo/core/cubit/session/session_state.dart';
+import 'package:avo/services/session/session_confirm.dart';
 import 'package:avo/services/session/session_found.dart';
 import 'package:avo/services/session/session_notfound.dart';
 import 'package:avo/services/session/session_waiting.dart';
@@ -25,6 +26,9 @@ class SessionPage extends StatelessWidget {
           }
           if(state is SessionFound){
             return SessionFoundPage(partnerName: state.room.partner);
+          }
+          if(state is SessionConfirm){
+            return SessionConfirmPage(partnerName: state.room.partner);
           }
           return Center(child: Text("#SESSION"));
         },

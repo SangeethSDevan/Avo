@@ -6,14 +6,14 @@ class RoomModel {
   RoomModel({
     required this.roomId,
     required this.duration,
-    required this.partner
+    required this.partner,
   });
 
   static RoomModel fromJSON(Map<String,dynamic> json){
     return RoomModel(
       roomId: json['roomId'], 
       duration: json['duration'], 
-      partner: json['partner']
+      partner: json['partner'],
     );
   }
 }

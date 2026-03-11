@@ -1,4 +1,6 @@
+import 'package:avo/core/cubit/session/session_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SessionFoundPage extends StatelessWidget {
   final String partnerName;
@@ -86,7 +88,7 @@ class SessionFoundPage extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 debugPrint("Ready!");
-                
+                context.read<SessionCubit>().startSession();
               },
               child: Text("I'm Ready"),
             ),

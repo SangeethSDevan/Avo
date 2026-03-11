@@ -1,5 +1,6 @@
 import 'package:avo/core/cubit/session/session_cubit.dart';
 import 'package:avo/core/storage/hive/user_controller.dart';
+import 'package:avo/model/cateogary_model.dart';
 import 'package:avo/services/home/components/duration_counter.dart';
 import 'package:avo/services/session/session_page.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   double counterValue = 1.0;
+  String selectedCategory = "Study";
+
+  List<CategoryModel> categories = [
+    CategoryModel(label: "Study", icon: Icons.menu_book),
+    CategoryModel(label: "Meditation", icon: Icons.self_improvement),
+    CategoryModel(label: "Workout", icon: Icons.fitness_center),
+    CategoryModel(label: "Coding", icon: Icons.code),
+    CategoryModel(label: "Reading", icon: Icons.bookmark),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +92,50 @@ class _HomePageState extends State<HomePage> {
                     const Text(
                       "**",
                       style: TextStyle(
-                        fontSize: 180,
+                        fontSize: 130,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: categories.map((category) {
+                        final bool isSelected =
+                            selectedCategory == category.label;
+                        return ChoiceChip(
+                          label: Text(
+                            category.label,
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : Colors.black87,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          avatar: Icon(
+                            category.icon,
+                            size: 18,
+                            color: isSelected ? Colors.white : Colors.black87,
+                          ),
+                          selected: isSelected,
+                          selectedColor: Colors.black,
+                          backgroundColor: Colors.grey.shade100,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            side: BorderSide(
+                              color: isSelected
+                                  ? Colors.black
+                                  : Colors.grey.shade400,
+                            ),
+                          ),
+
+                          onSelected: (value) {
+                            setState(() {
+                              selectedCategory = category.label;
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(height: 20),
                     Text(
                       "Hello ${user!.username}! 👋",
                       style: const TextStyle(
@@ -114,9 +164,10 @@ class _HomePageState extends State<HomePage> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          if (!context.read<SessionCubit>().isConnected())return;
+                          if (!context.read<SessionCubit>().isConnected()) return;
                           context.read<SessionCubit>().findPartner(
                             counterValue,
+                            selectedCategory
                           );
 
                           Navigator.of(context).push(
