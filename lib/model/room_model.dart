@@ -1,7 +1,7 @@
 class RoomModel {
   final String roomId;
-  final int duration;
-  final String partner;
+  final double duration;
+  final PartnerModel partner;
 
   RoomModel({
     required this.roomId,
@@ -13,7 +13,20 @@ class RoomModel {
     return RoomModel(
       roomId: json['roomId'], 
       duration: json['duration'], 
-      partner: json['partner'],
+      partner: PartnerModel.fromJSON(json['partner']),
+    );
+  }
+}
+
+class PartnerModel{
+  final String name;
+  final String category;
+
+  PartnerModel({required this.name,required this.category});
+  static PartnerModel fromJSON(Map<String,dynamic> json){
+    return PartnerModel(
+      name: json['name'],
+      category: json['category']
     );
   }
 }

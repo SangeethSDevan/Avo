@@ -1,6 +1,8 @@
 import 'package:avo/core/cubit/session/session_cubit.dart';
+import 'package:avo/core/cubit/user/user_cubit.dart';
 import 'package:avo/core/storage/hive/user_controller.dart';
 import 'package:avo/model/cateogary_model.dart';
+import 'package:avo/services/auth/signup_page.dart';
 import 'package:avo/services/home/components/duration_counter.dart';
 import 'package:avo/services/session/session_page.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +33,32 @@ class _HomePageState extends State<HomePage> {
     final user = userController.getUserData();
     return Scaffold(
       appBar: AppBar(title: const Text("Avo")),
-      drawer: const Drawer(),
+      drawer: Drawer(
+        child: ListView(
+            children: [
+              DrawerHeader(
+                child: UserAccountsDrawerHeader(
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(10)
+                    ),
+                    accountName: Text("Hi ${user!.username}"),
+                    accountEmail: Text(user.email)
+                ),
+              ),
+              ListTile(
+                title: Text("Logout"),
+                leading: Icon(Icons.logout),
+                onTap: () {
+                  context.read<UserCubit>().logout();
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => SignupPage()), (
+                      route) => false);
+                },
+              )
+            ],
+          )
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -44,7 +71,6 @@ class _HomePageState extends State<HomePage> {
                     child: DurationCounter(
                       onChanged: (value) {
                         counterValue = value;
-                        debugPrint("Duration: $counterValue");
                       },
                     ),
                   ),
@@ -116,8 +142,9 @@ class _HomePageState extends State<HomePage> {
                             color: isSelected ? Colors.white : Colors.black87,
                           ),
                           selected: isSelected,
+                          surfaceTintColor: Colors.blue,
                           selectedColor: Colors.black,
-                          backgroundColor: Colors.grey.shade100,
+                          backgroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
                             side: BorderSide(
@@ -137,7 +164,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height: 20),
                     Text(
-                      "Hello ${user!.username}! 👋",
+                      "Hello ${user.username}! 👋",
                       style: const TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.w700,

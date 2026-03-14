@@ -25,10 +25,10 @@ class SessionPage extends StatelessWidget {
             }
           }
           if(state is SessionFound){
-            return SessionFoundPage(partnerName: state.room.partner);
+            return SessionFoundPage(partnerName: state.room.partner.name);
           }
           if(state is SessionConfirm){
-            return SessionConfirmPage(partnerName: state.room.partner);
+            return SessionConfirmPage(partnerName: state.room.partner.name);
           }
           return Center(child: Text("#SESSION"));
         },

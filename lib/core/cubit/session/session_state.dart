@@ -6,39 +6,39 @@ class SessionInit extends SessionState{}
 
 class SessionLoading extends SessionState{}
 
-class SessionFound extends SessionState{
+class SessionActive extends SessionState{
   final RoomModel room;
-  SessionFound(this.room);
+  SessionActive(this.room);
 }
 
-class SessionConfirm extends SessionState{
-  final RoomModel room;
-  SessionConfirm(this.room);
+class SessionFound extends SessionActive{
+  SessionFound(super.room);
 }
 
-class SessionStarted extends SessionState{
-  final RoomModel room;
-  SessionStarted(this.room);
+class SessionConfirm extends SessionActive{
+  SessionConfirm(super.room);
 }
 
-class SessionWaiting extends SessionState{}
+class SessionStarted extends SessionActive{
+  SessionStarted(super.room);
+}
 
 class SessionQuit extends SessionState{
   final String message;
   SessionQuit(this.message);
 }
 
-class SessionBreakStart extends SessionState{
-  final RoomModel room;
-  SessionBreakStart(this.room);
+class SessionBreakStart extends SessionActive{
+  SessionBreakStart(super.room);
 }
 
-class SessionBreakEnd extends SessionState{
-  final RoomModel room;
-  SessionBreakEnd(this.room);
+class SessionBreakEnd extends SessionActive{
+  SessionBreakEnd(super.room);
 }
 
 class SessionEnded extends SessionState{}
+
+class SessionWaiting extends SessionState{}
 
 class SessionError extends SessionState{
   final String message;

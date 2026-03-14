@@ -47,6 +47,11 @@ class _SignupPageState extends State<SignupPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text("Welcome ${state.user.username}")),
               );
+
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => HomePage()),
+                (route) => false,
+              );
             }
           },
           builder: (context, state) {
@@ -55,133 +60,130 @@ class _SignupPageState extends State<SignupPage> {
                 child: CircularProgressIndicator(color: Colors.black),
               );
             }
-            return Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Want to be\nproductive?",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 40,
-                      color: Colors.grey.shade800,
-                    ),
-                  ),
-                  Text(
-                    "Welcome to Avo!",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 45),
-                  ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(20),
-                      hintText: "John Doe",
-                      prefixIcon: Icon(Icons.person),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "This field can't be empty";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    controller: _usernameController,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(20),
-                      hintText: "john.doe_",
-                      prefixIcon: Icon(Icons.alternate_email),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "username can't be empty!";
-                      } else if (!RegexPatterns.usernameRegex.hasMatch(value)) {
-                        return "$value is not a valid username";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(20),
-                      hintText: "john.doe@xyz.com",
-                      prefixIcon: Icon(Icons.email),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "email can't be empty!";
-                      } else if (!RegexPatterns.emailRegex.hasMatch(value)) {
-                        return "$value is not a valid email";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(20),
-                      hintText: "********",
-                      prefixIcon: Icon(Icons.password),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Password can't be empty!";
-                      } else if (!RegexPatterns.passwordRegex.hasMatch(value)) {
-                        return "The password is not valid";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          context.read<UserCubit>().signup(
-                            username: _usernameController.text.trim(),
-                            name: _nameController.text.trim(),
-                            password: _passwordController.text.trim(),
-                            email: _emailController.text.trim(),
-                          );
-
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                            (route) => false,
-                          );
-                        }
-                      },
-                      child: Text("SIGNUP"),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                      );
-                    },
-                    child: Text.rich(
-                      style: TextStyle(fontSize: 16),
-                      TextSpan(
-                        text: 'Already have an account?',
-                        children: [
-                          TextSpan(
-                            text: 'Login',
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                        ],
+            return SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Want to be\nproductive?",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 40,
+                        color: Colors.grey.shade800,
                       ),
                     ),
-                  ),
-                ],
+                    Text(
+                      "Welcome to Avo!",
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 45),
+                    ),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(20),
+                        hintText: "John Doe",
+                        prefixIcon: Icon(Icons.person),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "This field can't be empty";
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _usernameController,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(20),
+                        hintText: "john.doe_",
+                        prefixIcon: Icon(Icons.alternate_email),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "username can't be empty!";
+                        } else if (!RegexPatterns.usernameRegex.hasMatch(value)) {
+                          return "$value is not a valid username";
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(20),
+                        hintText: "john.doe@xyz.com",
+                        prefixIcon: Icon(Icons.email),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "email can't be empty!";
+                        } else if (!RegexPatterns.emailRegex.hasMatch(value)) {
+                          return "$value is not a valid email";
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(20),
+                        hintText: "********",
+                        prefixIcon: Icon(Icons.password),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Password can't be empty!";
+                        } else if (!RegexPatterns.passwordRegex.hasMatch(value)) {
+                          return "The password is not valid";
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            context.read<UserCubit>().signup(
+                              username: _usernameController.text.trim(),
+                              name: _nameController.text.trim(),
+                              password: _passwordController.text.trim(),
+                              email: _emailController.text.trim(),
+                            );
+                          }
+                        },
+                        child: Text("SIGNUP"),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                        );
+                      },
+                      child: Text.rich(
+                        style: TextStyle(fontSize: 16),
+                        TextSpan(
+                          text: 'Already have an account?',
+                          children: [
+                            TextSpan(
+                              text: 'Login',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },

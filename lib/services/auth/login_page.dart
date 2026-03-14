@@ -40,108 +40,108 @@ class _LoginPageState extends State<LoginPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Welcome ${state.user.username}")),
             );
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => HomePage()),
+              (route) => false,
+            );
           }
         },
         builder: (context, state) {
-          if(state is UserLoading){
+          if (state is UserLoading) {
             return Center(
-              child: CircularProgressIndicator(
-                color: Colors.black,
-              ),
+              child: CircularProgressIndicator(color: Colors.black),
             );
           }
-          return Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "We met\nbefore?",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 45,
-                      color: Colors.grey.shade800,
-                    ),
-                  ),
-                  Text(
-                    "Avo thinks so!",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 45),
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    controller: _credentialController,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(20),
-                      hintText: "john.doe_",
-                      prefixIcon: Icon(Icons.alternate_email),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "username can't be empty!";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(20),
-                      hintText: "********",
-                      prefixIcon: Icon(Icons.password),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Password can't be empty!";
-                      } else if (!RegexPatterns.passwordRegex.hasMatch(value)) {
-                        return "The password is not valid";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          context.read<UserCubit>().login(
-                            credential: _credentialController.text.trim(),
-                            password: _passwordController.text.trim(),
-                          );
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                            (route) => false,
-                          );
-                        }
-                      },
-                      child: Text("LOGIN"),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => SignupPage()),
-                      );
-                    },
-                    child: Text.rich(
-                      style: TextStyle(fontSize: 16),
-                      TextSpan(
-                        text: 'Don\'t have an account?',
-                        children: [
-                          TextSpan(
-                            text: 'Sign up',
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                        ],
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "We met\nbefore?",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 45,
+                        color: Colors.grey.shade800,
                       ),
                     ),
-                  ),
-                ],
+                    Text(
+                      "Avo thinks so!",
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 45),
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _credentialController,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(20),
+                        hintText: "john.doe_",
+                        prefixIcon: Icon(Icons.alternate_email),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "username can't be empty!";
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(20),
+                        hintText: "********",
+                        prefixIcon: Icon(Icons.password),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Password can't be empty!";
+                        } else if (!RegexPatterns.passwordRegex.hasMatch(value)) {
+                          return "The password is not valid";
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            context.read<UserCubit>().login(
+                              credential: _credentialController.text.trim(),
+                              password: _passwordController.text.trim(),
+                            );
+                          }
+                        },
+                        child: Text("LOGIN"),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => SignupPage()),
+                        );
+                      },
+                      child: Text.rich(
+                        style: TextStyle(fontSize: 16),
+                        TextSpan(
+                          text: 'Don\'t have an account?',
+                          children: [
+                            TextSpan(
+                              text: 'Sign up',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

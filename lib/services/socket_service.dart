@@ -8,11 +8,11 @@ class SocketService {
   late IO.Socket socket;
 
   Function(RoomModel room)? onMatchFound;
-  Function(RoomModel room)? onStart;
+  Function()? onStart;
   Function()? onWaiting;
   Function(String message)? onError;
-  Function(RoomModel room)? onBreakStart;
-  Function(RoomModel room)? onBreakEnd;
+  Function()? onBreakStart;
+  Function()? onBreakEnd;
   Function()? onSessionEnd;
   Function(String message)? onSessionQuit;
 
@@ -41,6 +41,8 @@ class SocketService {
     });
 
     socket.on("MATCH_FOUND", (data) {
+      debugPrint("MATCH FOUND!");
+      debugPrint(data.toString());
       final room = RoomModel.fromJSON(data);
       onMatchFound?.call(room);
     });
@@ -53,9 +55,8 @@ class SocketService {
       onError?.call("Looks like partner had left!");
     });
 
-    socket.on("SESSION_STARTED", (data) {
-      final activeRoom = RoomModel.fromJSON(data);
-      onStart?.call(activeRoom);
+    socket.on("SESSION_STARTED", (_) {
+      onStart?.call();
     });
 
     socket.on("SESSION_ENDED", (_) {
@@ -70,19 +71,12 @@ class SocketService {
       onSessionQuit?.call("Partner had left before the session!");
     });
 
-    socket.on("SESSION_STARTED", (data) {
-      final activeRoom =RoomModel.fromJSON(data);
-      onStart?.call(activeRoom);
-    });
-
     socket.on("BREAK_START", (data) {
-      final activeRoom = RoomModel.fromJSON(data);
-      onBreakStart?.call(activeRoom);
+      onBreakStart?.call();
     });
 
     socket.on("BREAK_END", (data) {
-      final activeRoom = RoomModel.fromJSON(data);
-      onBreakEnd?.call(activeRoom);
+      onBreakEnd?.call();
     });
   }
 
