@@ -1,4 +1,5 @@
 import 'package:avo/constants/regex_patterns.dart';
+import 'package:avo/core/cubit/session/session_cubit.dart';
 import 'package:avo/core/cubit/user/user_cubit.dart';
 import 'package:avo/core/cubit/user/user_state.dart';
 import 'package:avo/services/auth/signup_page.dart';
@@ -40,8 +41,15 @@ class _LoginPageState extends State<LoginPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Welcome ${state.user.username}")),
             );
+
             Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  lazy: false,
+                  create: (_) => SessionCubit()..connect(),
+                  child: HomePage(),
+                ),
+              ),
               (route) => false,
             );
           }
@@ -71,7 +79,10 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     Text(
                       "Avo thinks so!",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 45),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 45,
+                      ),
                     ),
                     SizedBox(height: 10),
                     TextFormField(
@@ -99,7 +110,9 @@ class _LoginPageState extends State<LoginPage> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Password can't be empty!";
-                        } else if (!RegexPatterns.passwordRegex.hasMatch(value)) {
+                        } else if (!RegexPatterns.passwordRegex.hasMatch(
+                          value,
+                        )) {
                           return "The password is not valid";
                         }
                         return null;

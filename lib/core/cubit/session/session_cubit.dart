@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:avo/core/cubit/session/session_state.dart';
+import 'package:avo/core/vibration/vibration_service.dart';
 import 'package:avo/model/room_model.dart';
 import 'package:avo/services/socket_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,13 +14,15 @@ class SessionCubit extends Cubit<SessionState> {
   void connect(){
     _socketService.connect();
 
-    _socketService.onMatchFound = (RoomModel room) {
+    _socketService.onMatchFound = (RoomModel room){
       _timeOutTimer?.cancel();
+      VibrationService.playVibration();
       emit(SessionFound(room));
     };
 
     _socketService.onError = (String message) {
       _timeOutTimer?.cancel();
+      VibrationService.playVibration();
       emit(SessionError(message));
     };
 
@@ -30,6 +33,7 @@ class SessionCubit extends Cubit<SessionState> {
     _socketService.onStart = () {
       final currentState=state;
       if(currentState is SessionActive){
+        VibrationService.playVibration();
         emit(SessionStarted(currentState.room));
       }
     };
@@ -37,6 +41,7 @@ class SessionCubit extends Cubit<SessionState> {
     _socketService.onBreakStart = () {
       final currentState=state;
       if(currentState is SessionActive){
+        VibrationService.playVibration();
         emit(SessionBreakStart(currentState.room));
       }
     };
@@ -44,16 +49,19 @@ class SessionCubit extends Cubit<SessionState> {
     _socketService.onBreakEnd = () {
       final currentState=state;
       if(currentState is SessionActive){
+        VibrationService.playVibration();
         emit(SessionBreakEnd(currentState.room));
       }
     };
 
     _socketService.onSessionEnd = () {
       emit(SessionEnded());
+      VibrationService.playVibration();
     };
 
     _socketService.onSessionQuit = (String message) {
       emit(SessionQuit(message));
+      VibrationService.playVibration();
     };
   }
 

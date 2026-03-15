@@ -1,4 +1,5 @@
 import 'package:avo/constants/regex_patterns.dart';
+import 'package:avo/core/cubit/session/session_cubit.dart';
 import 'package:avo/core/cubit/user/user_cubit.dart';
 import 'package:avo/core/cubit/user/user_state.dart';
 import 'package:avo/services/auth/login_page.dart';
@@ -49,7 +50,13 @@ class _SignupPageState extends State<SignupPage> {
               );
 
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => HomePage()),
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    lazy: false,
+                    create: (_) => SessionCubit()..connect(),
+                    child: HomePage(),
+                  ),
+                ),
                 (route) => false,
               );
             }
@@ -77,7 +84,10 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     Text(
                       "Welcome to Avo!",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 45),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 45,
+                      ),
                     ),
                     SizedBox(height: 20),
                     TextFormField(
@@ -105,7 +115,9 @@ class _SignupPageState extends State<SignupPage> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "username can't be empty!";
-                        } else if (!RegexPatterns.usernameRegex.hasMatch(value)) {
+                        } else if (!RegexPatterns.usernameRegex.hasMatch(
+                          value,
+                        )) {
                           return "$value is not a valid username";
                         }
                         return null;
@@ -139,7 +151,9 @@ class _SignupPageState extends State<SignupPage> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Password can't be empty!";
-                        } else if (!RegexPatterns.passwordRegex.hasMatch(value)) {
+                        } else if (!RegexPatterns.passwordRegex.hasMatch(
+                          value,
+                        )) {
                           return "The password is not valid";
                         }
                         return null;
