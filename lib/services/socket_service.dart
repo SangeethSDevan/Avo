@@ -80,8 +80,8 @@ class SocketService {
     });
   }
 
-  void waitingQuit(){
-    socket.emit("SESSION_WAITING_LEFT");
+  void sessionQuit(){
+    socket.emit("SESSION_EXIT");
   }
 
   void findPartner(double duration,String category) {

@@ -12,7 +12,7 @@ class RoomModel {
   static RoomModel fromJSON(Map<String,dynamic> json){
     return RoomModel(
       roomId: json['roomId'], 
-      duration: json['duration'], 
+      duration: (json['duration'] as num).toDouble(), 
       partner: PartnerModel.fromJSON(json['partner']),
     );
   }

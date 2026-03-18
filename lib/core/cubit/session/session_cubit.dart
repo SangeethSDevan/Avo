@@ -72,7 +72,7 @@ class SessionCubit extends Cubit<SessionState> {
     _timeOutTimer?.cancel();
     _timeOutTimer = Timer(const Duration(minutes: 1), () {
       if (state is SessionWaiting) {
-        _socketService.waitingQuit();
+        _socketService.sessionQuit();
         emit(
           SessionQuit("#NOT_FOUND"),
         );
@@ -93,7 +93,7 @@ class SessionCubit extends Cubit<SessionState> {
     }
   }
 
-  void waitingQuit(){
-    _socketService.waitingQuit();
+  void sessionQuit(){
+    _socketService.sessionQuit();
   }
 }
