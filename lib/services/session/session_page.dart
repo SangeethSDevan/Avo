@@ -1,5 +1,6 @@
 import 'package:avo/core/cubit/session/session_cubit.dart';
 import 'package:avo/core/cubit/session/session_state.dart';
+import 'package:avo/services/session/session_active.dart';
 import 'package:avo/services/session/session_confirm.dart';
 import 'package:avo/services/session/session_found.dart';
 import 'package:avo/services/session/session_notfound.dart';
@@ -35,7 +36,7 @@ class SessionPage extends StatelessWidget {
                     "NO",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.black
+                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -47,7 +48,7 @@ class SessionPage extends StatelessWidget {
                     "YES",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.black
+                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -65,7 +66,12 @@ class SessionPage extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(title: Text("Avo")),
-        body: BlocBuilder<SessionCubit, SessionState>(
+        body: BlocConsumer<SessionCubit, SessionState>(
+          listener: (context, state) {
+            if (state is SessionQuit && state.message != "#NOT_FOUND") {
+              Navigator.popUntil(context, (route) => route.isFirst);
+            }
+          },
           builder: (context, state) {
             if (state is SessionWaiting) {
               return SessionWaitingPage();
@@ -81,7 +87,10 @@ class SessionPage extends StatelessWidget {
             if (state is SessionConfirm) {
               return SessionConfirmPage(partnerName: state.room.partner.name);
             }
-            return Center(child: Text("#SESSION"));
+            if(state is SessionActive){
+              return SessionActivePage();
+            }
+            return CircularProgressIndicator();
           },
         ),
       ),

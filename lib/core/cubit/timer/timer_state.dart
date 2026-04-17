@@ -1,8 +1,14 @@
+import 'package:avo/model/timer_stat_model.dart';
+
 sealed class TimerState {}
 
 class TimerUpdate extends TimerState{
-  final int value;
-  TimerUpdate(this.value);
+  final int remainingTime;
+  final double duration;
+  
+  TimerUpdate(TimerStatModel time)
+    : remainingTime = time.remainingTime,
+      duration = time.duration;
 }
 
 class TimerError extends TimerState{

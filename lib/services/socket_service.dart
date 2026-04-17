@@ -1,10 +1,16 @@
 import 'package:avo/constants/constants.dart';
 import 'package:avo/core/storage/hive/user_controller.dart';
 import 'package:avo/model/room_model.dart';
+import 'package:avo/model/timer_stat_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketService {
+  static final SocketService _instance=SocketService._internal();
+  factory SocketService()=>_instance;
+
+  SocketService._internal();
+
   late IO.Socket socket;
 
   Function(RoomModel room)? onMatchFound;
@@ -15,6 +21,7 @@ class SocketService {
   Function()? onBreakEnd;
   Function()? onSessionEnd;
   Function(String message)? onSessionQuit;
+  Function(TimerStatModel time)? onTimerUpdate;
 
   void connect() {
     final userController=UserController();
@@ -41,8 +48,6 @@ class SocketService {
     });
 
     socket.on("MATCH_FOUND", (data) {
-      debugPrint("MATCH FOUND!");
-      debugPrint(data.toString());
       final room = RoomModel.fromJSON(data);
       onMatchFound?.call(room);
     });
@@ -77,6 +82,13 @@ class SocketService {
 
     socket.on("BREAK_END", (data) {
       onBreakEnd?.call();
+    });
+
+    socket.on("TIMER_STAT", (remainingTime){
+      final time=TimerStatModel.fromJSON(remainingTime);
+      final duration=Duration(milliseconds: time.remainingTime);
+      onTimerUpdate?.call(time);      
+      print('${duration.inHours}:${(duration.inMinutes % 60).toString().padLeft(2, '0')}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}');
     });
   }
 
