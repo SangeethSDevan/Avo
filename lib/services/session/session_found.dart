@@ -1,4 +1,5 @@
 import 'package:avo/core/cubit/session/session_cubit.dart';
+import 'package:avo/services/session/components/session_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,35 +31,7 @@ class SessionFoundPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 30),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white54,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 25,
-                          backgroundColor: Colors.black,
-                          child: Text(
-                            partnerName.substring(0, 1),
-                            style: TextStyle(color: Colors.white, fontSize: 25),
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          partnerName,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                SessionCard(partnerName: partnerName),
                 SizedBox(height: 10),
                 Text(
                   "Your focus partner.",

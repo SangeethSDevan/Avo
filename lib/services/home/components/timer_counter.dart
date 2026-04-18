@@ -33,6 +33,7 @@ class TimerCounter extends StatelessWidget {
                   value: (state.remainingTime/totalDuration),
                   strokeWidth: 10,
                   color: Colors.black,
+                  backgroundColor: const Color.fromARGB(179, 204, 204, 204),
                   strokeCap: StrokeCap.round,
                 ),
               ),
@@ -46,7 +47,7 @@ class TimerCounter extends StatelessWidget {
             ],
           );
         }
-        return CircularProgressIndicator();
+        return Text("Something went wrong!");
       },
     );
   }

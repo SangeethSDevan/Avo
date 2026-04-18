@@ -7,9 +7,28 @@ import 'package:avo/services/session/session_notfound.dart';
 import 'package:avo/services/session/session_waiting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
-class SessionPage extends StatelessWidget {
+class SessionPage extends StatefulWidget {
   const SessionPage({super.key});
+
+  @override
+  State<SessionPage> createState() => _SessionPageState();
+}
+
+class _SessionPageState extends State<SessionPage> {
+
+  @override
+  void initState(){
+    super.initState();
+    WakelockPlus.enable();
+  }
+
+  @override
+  void dispose() {
+    WakelockPlus.disable();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +107,7 @@ class SessionPage extends StatelessWidget {
               return SessionConfirmPage(partnerName: state.room.partner.name);
             }
             if(state is SessionActive){
-              return SessionActivePage();
+              return SessionActivePage(partnerName: state.room.partner.name,);
             }
             return CircularProgressIndicator();
           },
